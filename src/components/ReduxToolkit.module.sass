@@ -1,0 +1,103 @@
+@import "./style/_templates" 
+    
+*
+    box-sizing: border-box
+    margin: 0
+    padding: 0
+
+h1
+    font-size: 70px
+    @extend %flex
+    padding-top: 200px
+    color: white
+    letter-spacing: 25px
+    font-weight: 700
+
+
+header
+  min-height: 500px
+  @extend %flex
+  color: white
+  background-color: #7a1f2b
+  background-image: url('../assets/images/headBg.jpeg')
+  background-size: cover
+  background-position: center bottom
+  background-repeat: no-repeat
+  background-attachment: fixed
+
+.headContainer
+    min-height: 500px
+    backdrop-filter: blur(5px)
+    width: 100%
+    position: relative
+
+.form
+    display: flex
+    flex-direction: column
+    align-items: center
+
+.createInputContainer
+    position: absolute
+    top: 330px
+    left: 0
+    right: 0
+    display: flex
+    justify-content: center
+
+.createInput
+    height: 60px
+    width: 560px
+    padding: 10px
+    border: none
+    border-radius: 3px
+
+.addBtn
+    width: 80px
+    height: 60px
+    border: none
+    border-radius: 10px
+    margin-left: 20px
+    background-color: #646faf
+    color: white
+    font-size: 20px
+    font-weight: 700
+
+    &:hover
+        cursor: pointer
+        background-color: #555f96
+
+.listContainer
+    list-style: none
+    width: 560px
+    box-shadow: black 0 0 1px 
+    text-align: center
+    border-radius: 3px
+    position: absolute
+    top: 430px
+    background: white
+
+.option
+    text-align: left
+    padding: 25px
+    border-top: 1px solid #d3d3d3
+    position: relative
+
+    input
+        margin-right: 15px
+        width: 24px
+        height: 24px
+        vertical-align: middle
+
+.done
+    background-color: #b6b6b6
+    color: grey
+
+.deleteBtn
+    width: 60px
+    height: 100%
+    border: none
+    position: absolute
+    right: 0
+    top: 0
+    &:hover
+        background-color: #c34c4c
