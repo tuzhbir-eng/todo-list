@@ -1,4 +1,4 @@
-@import "./style/_templates" 
+@import "./_templates" 
     
 *
     box-sizing: border-box
@@ -19,7 +19,7 @@ header
   @extend %flex
   color: white
   background-color: #7a1f2b
-  background-image: url('../assets/images/headBg.jpeg')
+  background-image: url('../../assets/images/headBg.jpeg')
   background-size: cover
   background-position: center bottom
   background-repeat: no-repeat
@@ -91,7 +91,7 @@ header
 .done
     background-color: #b6b6b6
     color: grey
-    text-decoration: line-through;
+    text-decoration: line-through
 
 .deleteBtn
     width: 60px
@@ -102,3 +102,23 @@ header
     top: 0
     &:hover
         background-color: #c34c4c
+
+.cardContainer
+    
+
+.userContainer
+    position: absolute
+    top: 30px
+    left: 30px 
+    background: #000000ba
+    width: 270px
+    height: 300px
+    @extend %flex
+    flex-direction: column
+    border: solid 1px white
+
+
+.userImg
+    height: 200px
+    width: 200px
+    border-radius: 50%

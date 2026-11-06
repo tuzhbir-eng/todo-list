@@ -1,11 +1,13 @@
 import { legacy_connect } from 'react-redux'
-import styles from './ReduxToolkit.module.sass'
 import { deleteOne, addOption } from '../store/slices/todoListSlice'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { getOptionThunk } from '../store/slices/todoListSlice'
 import { FaTrash } from 'react-icons/fa'
+import styles from './style/ReduxToolkit.module.sass'
+import { getUserThunk } from '../store/slices/randomUserSlice'
 
 function TodoItem ({ option, deleteOption }) {
-  const [done, setDone] = useState(false)
+  const [done, setDone] = useState(option.isDone)
   return (
     <li className={`${styles.option} ${done ? styles.done : ''}`}>
       <label>
@@ -15,7 +17,7 @@ function TodoItem ({ option, deleteOption }) {
           checked={done}
           onChange={() => setDone(prev => !prev)}
         />
-        {option.text}
+        <span>{option.text}</span>
         <button
           type='button'
           onClick={o => {
@@ -31,7 +33,16 @@ function TodoItem ({ option, deleteOption }) {
   )
 }
 
-function TodoList ({ options, deleteOption, newOption }) {
+function TodoList ({
+  error,
+  isFetching,
+  options,
+  deleteOption,
+  newOption,
+  getOption,
+  getUser,
+  user
+}) {
   const [text, setText] = useState('')
 
   const handleAdd = e => {
@@ -41,57 +52,81 @@ function TodoList ({ options, deleteOption, newOption }) {
     newOption(value)
     setText('')
   }
+  useEffect(() => {
+    getOption()
+    getUser()
+  }, [])
 
   return (
-    <div>
-      <header>
-        <div className={styles.headContainer}>
-          <h1>TODO</h1>
+    <>
+      {isFetching && <div>Please wait, Loading...</div>}
+      {error && <div>Error</div>}
+      {!isFetching && !error && (
+        <div>
+          <header>
+            <div className={styles.headContainer}>
+              <h1>TODO</h1>
+              <div>
+                {user && (
+                  <div className={styles.userContainer}>
+                    <img
+                      className={styles.userImg}
+                      src={user.picture.large}
+                      alt='userImg'
+                    />
+                    <h2 className={styles.userName}>
+                      {user.name.first} {user.name.last}
+                    </h2>
+                    <p className={styles.userEmail}>{user.email}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </header>
+          <main>
+            <form className={styles.form} onSubmit={handleAdd}>
+              <label className={styles.createInputContainer}>
+                <input
+                  className={styles.createInput}
+                  type='text'
+                  name='todo'
+                  placeholder='Create a new todo...'
+                  value={text}
+                  onChange={e => setText(e.target.value)}
+                />
+                <button
+                  className={styles.addBtn}
+                  type='button'
+                  name='addBtn'
+                  onClick={handleAdd}
+                >
+                  Add
+                </button>
+              </label>
+              <ul className={styles.listContainer}>
+                {options.map(o => (
+                  <TodoItem key={o.id} option={o} deleteOption={deleteOption} />
+                ))}
+              </ul>
+            </form>
+          </main>
+          <footer></footer>
         </div>
-      </header>
-      <main>
-        <form className={styles.form} onSubmit={handleAdd}>
-          <label className={styles.createInputContainer}>
-            <input
-              className={styles.createInput}
-              type='text'
-              name='todo'
-              placeholder='Create a new todo...'
-              value={text}
-              onChange={e => setText(e.target.value)}
-            />
-            <button
-              className={styles.addBtn}
-              type='button'
-              name='addBtn'
-              onClick={handleAdd}
-            >
-              Add
-            </button>
-          </label>
-          <ul className={styles.listContainer}>
-            {options.map(o => (
-              <TodoItem key={o.id} option={o} deleteOption={deleteOption} />
-            ))}
-          </ul>
-        </form>
-      </main>
-      <footer></footer>
-    </div>
+      )}
+    </>
   )
 }
 
-const mapStateToProps = state => {
-  return state.todoList
-}
+const mapStateToProps = ({ todoList, user }) => ({
+  ...todoList,
+  user: user.user
+})
 
-const mapDispatchToProps = dispatch => {
-  return {
-    deleteOption: id => dispatch(deleteOne(id)),
-    newOption: text => dispatch(addOption(text))
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  deleteOption: id => dispatch(deleteOne(id)),
+  newOption: text => dispatch(addOption(text)),
+  getOption: () => dispatch(getOptionThunk()),
+  getUser: () => dispatch(getUserThunk())
+})
 
-const withAccessToStore = legacy_connect(mapStateToProps, mapDispatchToProps)
-
-export default withAccessToStore(TodoList)
+export default legacy_connect(mapStateToProps, mapDispatchToProps)(TodoList)

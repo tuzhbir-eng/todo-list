@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import todoListReducer from './slices/todoListSlice'
+import userReducer from './slices/randomUserSlice'
 
 //СТАРИЙ МЕТОД
 // //сховище = стан + як змінювати стан (редюсер)
@@ -10,7 +11,8 @@ import todoListReducer from './slices/todoListSlice'
 
 const store = configureStore({
   reducer: {
-    todoList: todoListReducer
+    todoList: todoListReducer,
+    user: userReducer
   }
 })
 
